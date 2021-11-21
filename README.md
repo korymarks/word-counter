@@ -1,6 +1,6 @@
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Word Counting API
 
 ## Installation
 
@@ -27,23 +27,35 @@ $ npm run start:prod
 # unit tests
 $ npm run test
 
-# e2e tests
-$ npm run test:e2e
-
 # test coverage
 $ npm run test:cov
 ```
 
-## Support
+### Endpoint Manual Testing
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+#### Sample CURL
 
-## Stay in touch
+```bash
+curl --location --request POST 'http://localhost:3000/word-counter/frequencies' \
+--form 'file=@"{PATH-TO-YOUR-TEXT-FILE}"' \
+--form 'top="5"'
+```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+#### Sample JavaScript Fetch
 
-## License
+```javascript
+var formdata = new FormData();
+formdata.append('file', fileInput.files[0], '{PATH-TO-YOUR-TEXT-FILE}');
+formdata.append('top', '5');
 
-Nest is [MIT licensed](LICENSE).
+var requestOptions = {
+  method: 'POST',
+  body: formdata,
+  redirect: 'follow',
+};
+
+fetch('http://localhost:3000/word-counter/frequencies', requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.log('error', error));
+```
