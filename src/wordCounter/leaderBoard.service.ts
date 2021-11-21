@@ -1,4 +1,4 @@
-import { Injectable, Scope } from '@nestjs/common';
+import { Injectable, Logger, Scope } from '@nestjs/common';
 import { sort } from 'fast-sort';
 import { LeaderBoardDto } from './leaderBoard.dto';
 import { LeaderBoardItem, WordCountMap } from './types';
@@ -6,8 +6,10 @@ import { LeaderBoardItem, WordCountMap } from './types';
 @Injectable({ scope: Scope.REQUEST })
 export class LeaderBoardService {
   private board: LeaderBoardItem[] = [];
+  private logger = new Logger(LeaderBoardService.name);
 
   public rank(wordCountMap: WordCountMap, top = 5): LeaderBoardDto[] {
+    this.logger.verbose('Ranking the word counts');
     this.sort(wordCountMap);
     return this.getTop(top);
   }
@@ -17,6 +19,7 @@ export class LeaderBoardService {
   }
 
   private getTop(count: number) {
+    this.logger.verbose(`Getting the top ${count} words`);
     const currentTop = this.board.slice(0, count);
     const lastItem = currentTop?.[currentTop.length - 1];
     const results = this.recurseForPossibleTiedItems(

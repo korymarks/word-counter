@@ -1,12 +1,13 @@
 import { Injectable, Scope } from '@nestjs/common';
+import { WordCountMap } from './types';
 
 @Injectable({ scope: Scope.REQUEST })
 export class WordCounterService {
-  private wordCounts = new Map<string, number>();
+  private wordCounts: WordCountMap = new Map();
 
   countWords(text: string): void {
     text
-      .replace(/[,;.\n\s{1,}]/gi, ' ')
+      .replace(/[,;!?:.\n\s{1,}]/gi, ' ')
       .toLocaleLowerCase()
       .split(' ')
       .forEach((d) => {
@@ -17,11 +18,11 @@ export class WordCounterService {
           return this.wordCounts.set(d, currentWordTotal + 1);
         }
 
-        return this.wordCounts.set(d, 1);
+        this.wordCounts.set(d, 1);
       });
   }
 
-  getWordCounts() {
+  getWordCounts(): WordCountMap {
     return this.wordCounts;
   }
 }
